@@ -66,12 +66,16 @@ DWORD WINAPI Calculation(LPVOID lpData) {
 
 }
 
-void CalcWin(int x) {
+int main()
+{
+    system("chcp 1251");
+    system("cls");
 
-    counterThreads = x;
+    cout << "Введите количество потоков: ";
+    cin >> counterThreads;
 
-    THREADPI** Var   = new THREADPI*[counterThreads];   //Массив, содержащий структуры, используемые для вычисления числа Пи
-    HANDLE* Threads  = new HANDLE[counterThreads];      //Массив, содержащий дескрипторы потоков
+    THREADPI** Var = new THREADPI * [counterThreads];   //Массив, содержащий структуры, используемые для вычисления числа Пи
+    HANDLE* Threads = new HANDLE[counterThreads];      //Массив, содержащий дескрипторы потоков
     DWORD* ThreadsID = new DWORD[counterThreads];       //Массив, содержащий ID потоков
 
     long* counter = new long;
@@ -84,7 +88,7 @@ void CalcWin(int x) {
         Var[i] = new THREADPI{ counter, 0 };
 
         Threads[i] = CreateThread(NULL, 0, Calculation, Var[i],
-                                  CREATE_SUSPENDED, &ThreadsID[i]);
+            CREATE_SUSPENDED, &ThreadsID[i]);
     }
 
     //Начало измерения времени работы
@@ -109,7 +113,7 @@ void CalcWin(int x) {
     //Конец измерения времени работы
     unsigned int endTime = GetTickCount();
 
-    cout << "Время вычислений:" << endTime - startTime << '\n';
+    cout << "Время вычислений: " << endTime - startTime << '\n';
     cout.precision(10);
     cout << "Результат вычислений: " << sum << '\n';
 
@@ -118,20 +122,6 @@ void CalcWin(int x) {
         CloseHandle(Threads[i]);
     }
     delete[] Var;
-}
-
-
-int main()
-{
-    system("chcp 1251");
-    system("cls");
-
-    int thr;
-
-    cout << "Введите количество потоков: ";
-    cin >> thr;
-
-    CalcWin(thr);
 
     return 0;
 }
